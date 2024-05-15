@@ -1,11 +1,11 @@
 """DiscordBot"""
 import os
-# import datetime
-# import asyncio
+import asyncio
 import discord
 from dotenv import load_dotenv
 from openai import OpenAI
 from tinydb import TinyDB
+from news import get_news_from_xml
 
 SUMI_ID = 252142384303833088
 
@@ -38,22 +38,32 @@ async def on_ready():
     """Event handler for when the bot is ready"""
     print('Bot is ready.')
 
-    # # Event handler to send message at 9am
-    # @discord_client.event
-    # async def send_message_at_9am():
-    #     while True:
-    #         now = datetime.datetime.now()
-    #         if now.hour == 9 and now.minute == 0:
-    #             channel = discord_client.get_user(SUMI_ID)
-    #             await channel.send("Good morning!")
-    #             # GET FEED FROM XML, SORT BY DATE, GET ONLY TODAY'S NEWS AND SEND OVER TO GPT
-    #             # gpt_response = get_news_from_xml()
-    #             # db.insert({'user': "Morning news?", 'fran': gpt_response})
+    # Start the task to send message at 9am
+    await discord_client.loop.create_task(check_news())
 
-    #         await asyncio.sleep(60)  # Check every minute
+# Event handler to send message at 9am
+@discord_client.event
+async def check_news():
+    """Send a message at 11am"""
+    await asyncio.sleep(1)  # Check every minute 60
+    while True:
+        channel = await discord_client.fetch_user(SUMI_ID)
+        today_news = await get_news_from_xml()
 
-    # # Start the task to send message at 9am
-    # discord_client.loop.create_task(send_message_at_9am())
+        if len(today_news) <= 0:
+            continue
+
+        completion = gpt_client.chat.completions.create(
+            model=gpt_model,
+            messages=[
+            {"role": "system", "content": GPT_INSTRUCTIONS + '\n Give me a summary of the news today \n News: ' + str(today_news)},
+            {"role": "user", "content": 'Good morning!'}
+            ]
+        )
+        gpt_response = completion.choices[0].message.content
+        db.insert({'user': 'Good morning!', 'fran': gpt_response})
+        await channel.send(gpt_response)
+    #@TODO ADD A verification that only sends the message once when its received, and dont send every minute that checks it
 
 # Event handler for when a message is received
 @discord_client.event
@@ -62,9 +72,8 @@ async def on_message(message):
     if message.author == discord_client.user:
         return
 
-    # Check if the  message was sent from Sumi
-    if message.author.id != 252142384303833088:
-        await message.channel.send("My mom said I can't talk to strangers.")
+    if message.author.id != SUMI_ID:
+        await message.channel.send("I can't talk to strangers.")
         return
 
     #checks if the message is an image
@@ -115,11 +124,8 @@ async def on_message(message):
         await message.channel.send(gpt_response)
 
     except IndexError as e:
-        #limpa a db caso o GPT não consiga responder
         db.truncate()
         await message.channel.send("I'm sorry, I'm not sure how to respond to that.")
         print(e)
 
-
-# Run the bot with your Discord bot token
 discord_client.run(discord_api)
