@@ -44,8 +44,9 @@ async def on_ready():
 # Event handler to send message at 9am
 @discord_client.event
 async def check_news():
-    """Send a message at 11am"""
-    await asyncio.sleep(1)  # Check every minute 60
+    """Send a message if get news from the FFXIV news feed."""
+    # Check every hour
+    await asyncio.sleep(3600)
     while True:
         channel = await discord_client.fetch_user(SUMI_ID)
         today_news = await get_news_from_xml()
@@ -56,14 +57,13 @@ async def check_news():
         completion = gpt_client.chat.completions.create(
             model=gpt_model,
             messages=[
-            {"role": "system", "content": GPT_INSTRUCTIONS + '\n Give me a summary of the news today \n News: ' + str(today_news)},
-            {"role": "user", "content": 'Good morning!'}
+            {"role": "system", "content": GPT_INSTRUCTIONS + '\n News: ' + str(today_news)},
+            {"role": "user", "content": 'Talk about the news please :)'}
             ]
         )
         gpt_response = completion.choices[0].message.content
         db.insert({'user': 'Good morning!', 'fran': gpt_response})
         await channel.send(gpt_response)
-    #@TODO ADD A verification that only sends the message once when its received, and dont send every minute that checks it
 
 # Event handler for when a message is received
 @discord_client.event

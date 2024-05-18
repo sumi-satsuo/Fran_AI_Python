@@ -1,4 +1,7 @@
-"""This module is responsible for getting the news from the FFXIV news feed and returning the news for today."""
+"""
+This module is responsible for getting the news from the FFXIV news feed 
+and return the news for today.
+"""
 import os
 import datetime
 import feedparser
@@ -18,8 +21,8 @@ async def get_news_from_xml():
     today = datetime.datetime.now()
     today = today.strftime('%Y-%m-%dT%H:%M')
 
-    #FOR TESTING PURPOSES
-    today = '2024-05-14T08:45'
+    # #FOR TESTING PURPOSES
+    # today = '2024-05-14T08:45'
 
     today_news = None
     # Loop through each entry in the feed
@@ -38,11 +41,11 @@ async def get_news_from_xml():
     return None
 
 
-async def main():
-    """Main function to test the get_news_from_xml function."""
-    news = await get_news_from_xml()
-    print(news)
+# async def main():
+#     """Main function to test the get_news_from_xml function."""
+#     news = await get_news_from_xml()
+#     print(news)
 
-if __name__ == '__main__':
-    import asyncio
-    asyncio.run(main())
+# if __name__ == '__main__':
+#     import asyncio
+#     asyncio.run(main())
