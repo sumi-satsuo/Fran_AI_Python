@@ -39,13 +39,3 @@ async def get_news_from_xml():
     if today_news:
         return today_news
     return None
-
-
-# async def main():
-#     """Main function to test the get_news_from_xml function."""
-#     news = await get_news_from_xml()
-#     print(news)
-
-# if __name__ == '__main__':
-#     import asyncio
-#     asyncio.run(main())
