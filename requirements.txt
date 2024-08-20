@@ -1,3 +1,5 @@
 openai
 tinydb
 discord
+python-dotenv
+feedparser
