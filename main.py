@@ -1,10 +1,10 @@
 """DiscordBot"""
 import os
-import asyncio
+# import asyncio
 import discord
 from dotenv import load_dotenv
 from AI_Tools.fran_brain import FranBrain as Fran
-from news import get_news_from_xml
+# from news import get_news_from_xml
 #pylint: disable=W0718
 
 SUMI_ID = 252142384303833088
@@ -26,20 +26,20 @@ async def on_ready():
     print('Bot is ready.')
 
     # Start the task to send message at 9am
-    await discord_client.loop.create_task(check_news())
+    # await discord_client.loop.create_task(check_news())
 
 # Event handler to send message at 9am
-@discord_client.event
-async def check_news():
-    """Send a message if get news from the FFXIV news feed."""
-    # Check every hour
-    await asyncio.sleep(3600)
-    while True:
-        channel = await discord_client.fetch_user(SUMI_ID)
-        today_news = await get_news_from_xml()
-        if today_news:
-            gpt_response = fran.parse_ffxiv_news(today_news)
-            await channel.send(gpt_response)
+# @discord_client.event
+# async def check_news():
+#     """Send a message if get news from the FFXIV news feed."""
+#     # Check every hour
+#     await asyncio.sleep(3600)
+#     while True:
+#         channel = await discord_client.fetch_user(SUMI_ID)
+#         today_news = await get_news_from_xml()
+#         if today_news:
+#             gpt_response = fran.parse_ffxiv_news(today_news)
+#             await channel.send(gpt_response)
 
 # Event handler for when a message is received
 @discord_client.event
@@ -54,7 +54,8 @@ async def on_message(message):
 
     #checks if the message is an image
     if message.attachments:
-        gpt_response = fran.get_response_for_image(message.attachments[0])
+        return
+        # gpt_response = fran.get_response_for_image(message.attachments[0])
     else:
         gpt_response = fran.get_response_for_text(message.content)
     try:
