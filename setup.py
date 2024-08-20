@@ -7,6 +7,8 @@ setup(
     install_requires=[
         'openai',
         'tinydb',
-        'discord'
+        'discord',
+        'python-dotenv',
+        'feedparser'
     ],
 )
