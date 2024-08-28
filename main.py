@@ -7,7 +7,7 @@ from AI_Tools.fran_brain import FranBrain as Fran
 # from news import get_news_from_xml
 #pylint: disable=W0718
 
-SUMI_ID = 252142384303833088
+SUMI_ID = 1
 fran = Fran()
 
 # Load the environment variables
