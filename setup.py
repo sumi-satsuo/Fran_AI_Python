@@ -5,10 +5,10 @@ setup(
     version='0.1',
     packages=find_packages(),
     install_requires=[
+        'openai',
         'tinydb',
         'discord',
         'python-dotenv',
-        'feedparser',
-        'requests'
+        'feedparser'
     ],
 )

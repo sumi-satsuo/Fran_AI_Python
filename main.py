@@ -54,8 +54,7 @@ async def on_message(message):
 
     #checks if the message is an image
     if message.attachments:
-        return
-        # gpt_response = fran.get_response_for_image(message.attachments[0])
+        gpt_response = fran.get_response_for_image(message.attachments[0])
     else:
         gpt_response = fran.get_response_for_text(message.content)
     try:
